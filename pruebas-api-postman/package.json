@@ -2,10 +2,20 @@
   "name": "pruebas-api-postman",
   "version": "1.0.0",
   "private": true,
-  "description": "Coleccion de Postman para la API del gestor de tareas, ejecutable con Newman",
+  "description": "Coleccion de Postman para la API del gestor de tareas, ejecutable con Newman y reporteria ejecutiva con dashboard interactivo",
   "scripts": {
-    "test": "newman run coleccion.json -e entorno.local.json --reporters cli",
-    "test:reporte": "newman run coleccion.json -e entorno.local.json --reporters cli,htmlextra --reporter-htmlextra-export reporte/newman.html"
+    "test": "node run-tests.js",
+    "test:api": "node run-tests.js",
+    "test:report": "node run-tests.js --report",
+    "test:reporte": "node run-tests.js --report",
+    "test:cli": "node run-tests.js --no-report",
+    "test:salud": "node run-tests.js --folder Salud",
+    "test:auth": "node run-tests.js --folder Autenticacion",
+    "test:tareas": "node run-tests.js --folder Tareas",
+    "test:seguridad": "node run-tests.js --folder Seguridad",
+    "test:bail": "node run-tests.js --bail",
+    "newman:cli": "newman run coleccion.json -e entorno.local.json --reporters cli",
+    "newman:report": "newman run coleccion.json -e entorno.local.json --reporters cli,htmlextra --reporter-htmlextra-export reporte/newman.html --reporter-htmlextra-title \"Reporte Ejecutivo de Pruebas API\""
   },
   "devDependencies": {
     "newman": "^6.2.1",

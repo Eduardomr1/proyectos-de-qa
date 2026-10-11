@@ -37,8 +37,17 @@ jobs:
           npm start &
           npx wait-on http://localhost:3000/health --timeout 60000
 
-      - name: Correr la coleccion con Newman
+      - name: Correr la coleccion con Newman y generar reporte ejecutivo
         working-directory: pruebas-api-postman
         run: |
           npm install
-          npm test
+          npm run test:report
+
+      - name: Publicar reporte HTML ejecutivo como artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-ejecutivo-api-newman
+          path: pruebas-api-postman/reporte/
+          retention-days: 14
+
