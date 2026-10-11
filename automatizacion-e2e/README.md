@@ -4,7 +4,7 @@ Suite de pruebas extremo a extremo con Playwright sobre el
 [gestor de tareas](https://github.com/eduardo-mr1/proyectos-de-programacion):
 API en Node/Express + cliente en React.
 
-15 pruebas cubriendo autenticacion, CRUD de tareas y aislamiento entre usuarios.
+32 pruebas cubriendo accesibilidad WCAG 2.1 AA, autenticacion, CRUD de tareas, no-regresion y aislamiento entre usuarios.
 
 ## Por que la app bajo prueba vive en otro repositorio
 
@@ -47,10 +47,12 @@ APP_URL=http://localhost:4173 npm test
 
 | Archivo | Cobertura |
 |---|---|
+| `tests/accesibilidad.spec.js` | Auditorías completas con `@axe-core/playwright` bajo estándares WCAG 2.1 AA (contraste de color, roles ARIA y semántica, navegación 100% por teclado y formularios accesibles) |
 | `tests/autenticacion.spec.js` | Registro, login, logout, credenciales invalidas, email duplicado, persistencia de sesion |
 | `tests/tareas.spec.js` | Crear, completar, descompletar, eliminar, contador de pendientes, persistencia, aislamiento entre usuarios |
+| `tests/regresiones-ui.spec.js` | No-regresión en UI: desborde de títulos largos (BUG-003) y actualización reactiva inmediata de checkbox (BUG-008) |
 
-La prueba mas importante es la ultima: **un usuario no ve las tareas de otro**.
+La prueba funcional mas importante es el aislamiento: **un usuario no ve las tareas de otro**.
 La API ya lo verifica a nivel de integracion, pero esta lo confirma desde la
 interfaz, que es donde el usuario real lo experimenta.
 
@@ -61,14 +63,17 @@ La suite implementa el patrón **Page Object Model (POM)** para desacoplar las i
 ```
 automatizacion-e2e/
 ├── pages/
-│   ├── AuthPage.js     # Encapsula selectores y acciones de Login / Registro
-│   ├── TareasPage.js   # Encapsula selectores y acciones de la lista de tareas
-│   └── index.js        # Punto de entrada unificado de los Page Objects
+│   ├── AuthPage.js           # Encapsula selectores y acciones de Login / Registro
+│   ├── TareasPage.js         # Encapsula selectores y acciones de la lista de tareas
+│   └── index.js              # Punto de entrada unificado de los Page Objects
 ├── tests/
-│   ├── autenticacion.spec.js   # Casos E2E de auth usando AuthPage y TareasPage
-│   ├── tareas.spec.js          # Casos E2E de gestión de tareas usando TareasPage
-│   ├── regresiones-ui.spec.js  # Pruebas de no-regresión de interfaz
-│   └── helpers.js              # Funciones auxiliares y generador de usuarios
+│   ├── accesibilidad.spec.js # Auditorías A11y con @axe-core/playwright (WCAG 2.1 AA)
+│   ├── autenticacion.spec.js # Casos E2E de auth usando AuthPage y TareasPage
+│   ├── tareas.spec.js        # Casos E2E de gestión de tareas usando TareasPage
+│   ├── regresiones-ui.spec.js# Pruebas de no-regresión de interfaz
+│   ├── fixtures/
+│   │   └── a11y.js           # Fixture reutilizable con tags WCAG 2.1 AA y AxeBuilder
+│   └── helpers.js            # Funciones auxiliares y reexport de fixtures
 └── playwright.config.js
 ```
 
@@ -76,6 +81,16 @@ automatizacion-e2e/
 1. **Mantenibilidad:** Si un selector o etiqueta cambia en el frontend, solo se actualiza en el Page Object correspondiente sin tocar los specs.
 2. **Legibilidad orientada a intención:** Las pruebas describen el flujo de usuario en alto nivel (`await authPage.registrar(...)`, `await tareasPage.agregarTarea(...)`).
 3. **Selectores accesibles centralizados:** Todos los locators continúan priorizando roles y etiquetas accesibles (`getByRole`, `getByLabel`), garantizando que la suite falle si la accesibilidad se degrada.
+
+## Auditorías de Accesibilidad (A11y - WCAG 2.1 AA)
+
+Se integró `@axe-core/playwright` con fixtures y helpers reutilizables para garantizar el cumplimiento de los estándares internacionales de accesibilidad web **WCAG 2.1 Nivel A y AA**:
+
+- **Reglas evaluadas:** `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`.
+- **Contraste de color (WCAG 1.4.3):** Verificación de ratio mínimo de contraste (>= 4.5:1 para texto normal) tanto en pantallas claras como con textos secundarios.
+- **Estructura semántica y roles ARIA (WCAG 1.3.1 y 4.1.2):** Uso estricto de encabezados `h1`, regiones `main`, alertas dinámicas con `role="alert"` y etiquetas explícitas `aria-label` en botones de eliminación y campos de captura.
+- **Navegación 100% por teclado (WCAG 2.1.1 y 2.4.7):** Flujos completos operables mediante `Tab`, `Shift+Tab`, `Enter` y `Space` con indicadores de foco visible.
+- **Formularios y etiquetas accesibles (WCAG 3.3.2 y 1.3.5):** Validación de inputs asociados semánticamente a etiquetas y provistos de atributos `autocomplete` correspondientes.
 
 ## Decisiones de diseno
 
@@ -114,5 +129,3 @@ en la aplicacion (actualizacion optimista con reversion si la API falla).
 - **Solo Chromium.** Agregar Firefox y WebKit es cambiar `projects` en la
   configuracion; se dejo en uno para que CI corra rapido.
 - **Sin pruebas de responsive ni de dispositivos moviles.**
-- **Sin pruebas de accesibilidad automatizadas.** Los selectores por rol dan
-  cobertura indirecta, pero una auditoria con axe seria el siguiente paso.

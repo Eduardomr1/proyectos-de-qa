@@ -1,7 +1,9 @@
 import { AuthPage } from '../pages/AuthPage.js';
 import { TareasPage } from '../pages/TareasPage.js';
 
-export { AuthPage, TareasPage };
+import { auditarA11y, crearAuditorA11y, WCAG_TAGS } from './fixtures/a11y.js';
+
+export { AuthPage, TareasPage, auditarA11y, crearAuditorA11y, WCAG_TAGS };
 
 /** Cada prueba usa un email unico para no chocar con datos de corridas previas. */
 export function nuevoUsuario() {
