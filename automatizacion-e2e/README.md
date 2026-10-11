@@ -56,6 +56,45 @@ La prueba funcional mas importante es el aislamiento: **un usuario no ve las tar
 La API ya lo verifica a nivel de integracion, pero esta lo confirma desde la
 interfaz, que es donde el usuario real lo experimenta.
 
+---
+
+## 🏛️ Pirámide de Pruebas & Arquitectura de QA
+
+> 📖 **Documentación de arquitectura:** Consulta [docs/arquitectura/README.md](../docs/arquitectura/README.md) y [docs/arquitectura/automatizacion-e2e-testing-pyramid.md](../docs/arquitectura/automatizacion-e2e-testing-pyramid.md) para la estrategia integral de calidad y tolerancia a fallos.
+
+```mermaid
+flowchart TD
+    subgraph Pyramid["Pirámide de Automatización de Pruebas Integral"]
+        direction TB
+
+        L4["🔝 Capa E2E & Accesibilidad UI (Playwright POM + Axe Core)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 32 pruebas automatizadas en Chromium<br/>• Page Object Model estructurado (AuthPage, TareasPage)<br/>• Auditorías de Accesibilidad WCAG 2.1 AA con @axe-core/playwright<br/>• Locators orientados a accesibilidad (getByRole, getByLabel)<br/>• Aislamiento determinista de datos por usuario único"]
+
+        L3["⚡ Capa de Resiliencia de Red & Simulación de Caos (Chaos Testing)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Intercepción de tráfico de red (page.route())<br/>• Simulación de conectividad degradada y modo offline<br/>• Sincronización asíncrona sin timeouts fijos (eliminación de esperas frágiles)<br/>• Detección de UI asíncrona no optimista y condiciones de carrera"]
+
+        L2["🔌 Capa de Contrato & Integración de API (Postman + Newman Runner)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 25 peticiones HTTP organizadas en 4 carpetas funcionales<br/>• 96 aserciones de contrato, tipos y esquemas (100% aprobadas)<br/>• Verificación de seguridad JWT y RBAC sin interfaz gráfica<br/>• Runner configurable con Newman y reportes ejecutivos HTML interactivos"]
+
+        L1["🛡️ Base de Metacalidad & Pruebas Unitarias (Vigía + Vitest / Jest)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Auditoría AST de suites de prueba con Vigía (prevención de falsos positivos)<br/>• Pruebas unitarias de algoritmos y Casos de Uso puros de dominio<br/>• Suites de regresión automáticas para 14 defectos reales documentados<br/>• Trazabilidad completa entre bugs, planes de prueba y pruebas automáticas"]
+
+        L4 --- L3
+        L3 --- L2
+        L2 --- L1
+    end
+
+    subgraph CI_Pipelines["Orquestación en Integración Continua (GitHub Actions)"]
+        CI_API["ci-api-postman.yml<br/>(Pruebas de Contrato y Smoke API)"]
+        CI_E2E["ci-e2e.yml<br/>(Playwright E2E y Accesibilidad Axe)"]
+        CI_Vigia["ci-vigia.yml<br/>(Self-Check AST en PRs)"]
+        CI_Bugs["ci-verificacion-bugs.yml<br/>(Regresiones de Defectos Documentados)"]
+    end
+
+    L2 -.-> CI_API
+    L4 -.-> CI_E2E
+    L1 -.-> CI_Vigia
+    L1 -.-> CI_Bugs
+```
+
+---
+
 ## Arquitectura: Page Object Model (POM)
 
 La suite implementa el patrón **Page Object Model (POM)** para desacoplar las interacciones con la interfaz de las aserciones de prueba:
