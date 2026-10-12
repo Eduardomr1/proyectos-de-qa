@@ -73,6 +73,8 @@ corre la verificacion en cada cambio y ademas una vez por semana**, para
 detectar que un cambio en la aplicacion revive un defecto viejo aunque nadie
 toque este repositorio.
 
+> Para el mapeo integral de estos 8 defectos frente a la cobertura de API, E2E y pruebas de dominio, ver la [Matriz de Trazabilidad y Automatización](../plan-de-pruebas/matriz-trazabilidad-automatizacion.md).
+
 ---
 
 ## BUG-001

@@ -47,3 +47,4 @@ No incluye:
 
 - Este documento
 - `casos-de-prueba.md` con la matriz de casos
+- `matriz-trazabilidad-automatizacion.md` con la matriz de trazabilidad QA manual ↔ automatización
