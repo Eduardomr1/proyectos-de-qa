@@ -6,6 +6,7 @@
 [![Control de Gastos CI](https://github.com/eduardo-mr1/control-de-gastos/actions/workflows/ci.yml/badge.svg)](https://github.com/eduardo-mr1/control-de-gastos/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%7C%20Feature--First-blue)](./reservas)
+[![Docs Arquitectura](https://img.shields.io/badge/Docs-Arquitectura%20%26%20Diagramas-blueviolet)](./docs/arquitectura)
 
 Portafolio enfocado en **desarrollo full-stack, ingeniería de software móvil y aseguramiento de calidad (QA Automation)**. Los proyectos aquí presentados demuestran diseño arquitectónico robusto, dominio de TypeScript estricto, análisis estático de código mediante AST, arquitecturas desacopladas (*Clean Architecture* y *Offline-First*), suites de prueba deterministas y automatización en pipelines de Integración Continua (CI/CD).
 
@@ -108,6 +109,17 @@ Verificación y Cierre en CI  ←  Pruebas de Regresión  ←  Detección de Def
 | **Integración & Contrato** | Node Test Runner / Postman + Newman | Garantiza que la API cumpla contratos HTTP, tipos y aislamiento de datos. |
 | **Extremo a Extremo (E2E)** | Playwright / Maestro | Verifica flujos de usuario reales de principio a fin en web y dispositivos móviles. |
 
+## 🏛️ Arquitectura de Sistemas & Diagramas de Ingeniería
+
+Para líderes de ingeniería, arquitectos y reclutadores técnicos que deseen auditar el rigor técnico y los diagramas de flujo de cada subsistema, se dispone de un compendio centralizado en **[`docs/arquitectura/`](./docs/arquitectura)** con especificaciones visuales en formato Mermaid:
+
+- **[Offline-First & Sincronización Idempotente (Gastos)](./docs/arquitectura/control-de-gastos-offline-first.md):** Cola síncrona en MMKV, réplica local SQLite, sincronización por Supabase RPC (`sync_expense`), idempotencia por UUID en cliente y aritmética en centavos enteros.
+- **[Clean Architecture & Feature-First (Reservas / AgendaCitas)](./docs/arquitectura/reservas-clean-architecture.md):** Aislamiento estricto de dominio, motor matemático anti-colisión, manejo semántico de errores tipados (`Failure`) y segregación de barrels cliente/servidor (`index.ts` vs `server.ts`).
+- **[Pipeline AST & Code Scanning (Vigía)](./docs/arquitectura/vigia-ast-pipeline.md):** Análisis de Árbol de Sintaxis Abstracta con TypeScript Compiler API, detección de falsos positivos en suites de prueba y exportación de reportes OASIS SARIF v2.1.0 para GitHub Code Scanning.
+- **[Pirámide de Pruebas & Calidad Integral (Automatización E2E)](./docs/arquitectura/automatizacion-e2e-testing-pyramid.md):** Page Object Model en Playwright, auditorías automatizadas de accesibilidad web (Axe Core / WCAG 2.1 AA), contrato de API en Newman y simulación de resiliencia ante caos de red.
+
+👉 **Consulta el compendio completo en [docs/arquitectura/README.md](./docs/arquitectura/README.md)**.
+
 ---
 
 ## 🛠️ Stack Tecnológico Global
@@ -124,6 +136,8 @@ Verificación y Cierre en CI  ←  Pruebas de Regresión  ←  Detección de Def
 
 ```
 PortafolioProfesional/
+├── docs/                     # Compendio de arquitectura de software y diagramas Mermaid
+│   └── arquitectura/         # Especificaciones técnicas de diseño, flujo de datos y calidad
 ├── gastos/                   # App móvil React Native + Expo + Reanimated + Offline-First
 ├── reservas/                 # SaaS de Citas con Next.js + Clean Architecture + Drizzle ORM
 ├── vigia/                    # Linter AST en TypeScript & GitHub Action para suites de pruebas

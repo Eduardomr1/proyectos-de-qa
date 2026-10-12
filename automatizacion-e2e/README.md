@@ -4,7 +4,7 @@ Suite de pruebas extremo a extremo con Playwright sobre el
 [gestor de tareas](https://github.com/eduardo-mr1/proyectos-de-programacion):
 API en Node/Express + cliente en React.
 
-32 pruebas cubriendo accesibilidad WCAG 2.1 AA, autenticacion, CRUD de tareas, no-regresion y aislamiento entre usuarios.
+44 pruebas cubriendo resiliencia de red y mocking avanzado (page.route()), accesibilidad WCAG 2.1 AA, autenticacion, CRUD de tareas, no-regresion y aislamiento entre usuarios.
 
 ## Por que la app bajo prueba vive en otro repositorio
 
@@ -47,6 +47,7 @@ APP_URL=http://localhost:4173 npm test
 
 | Archivo | Cobertura |
 |---|---|
+| `tests/resiliencia-red.spec.js` | Resiliencia de red y caos con `page.route()`: simulación de errores HTTP 500 y 404, modo offline (`context.setOffline(true)` y `route.abort`), latencia extrema (1.5s - 2s), estados deshabilitados y prevención de doble submit |
 | `tests/accesibilidad.spec.js` | Auditorías completas con `@axe-core/playwright` bajo estándares WCAG 2.1 AA (contraste de color, roles ARIA y semántica, navegación 100% por teclado y formularios accesibles) |
 | `tests/autenticacion.spec.js` | Registro, login, logout, credenciales invalidas, email duplicado, persistencia de sesion |
 | `tests/tareas.spec.js` | Crear, completar, descompletar, eliminar, contador de pendientes, persistencia, aislamiento entre usuarios |
@@ -55,6 +56,45 @@ APP_URL=http://localhost:4173 npm test
 La prueba funcional mas importante es el aislamiento: **un usuario no ve las tareas de otro**.
 La API ya lo verifica a nivel de integracion, pero esta lo confirma desde la
 interfaz, que es donde el usuario real lo experimenta.
+
+---
+
+## 🏛️ Pirámide de Pruebas & Arquitectura de QA
+
+> 📖 **Documentación de arquitectura:** Consulta [docs/arquitectura/README.md](../docs/arquitectura/README.md) y [docs/arquitectura/automatizacion-e2e-testing-pyramid.md](../docs/arquitectura/automatizacion-e2e-testing-pyramid.md) para la estrategia integral de calidad y tolerancia a fallos.
+
+```mermaid
+flowchart TD
+    subgraph Pyramid["Pirámide de Automatización de Pruebas Integral"]
+        direction TB
+
+        L4["🔝 Capa E2E & Accesibilidad UI (Playwright POM + Axe Core)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 44 pruebas automatizadas en Chromium<br/>• Page Object Model estructurado (AuthPage, TareasPage)<br/>• Auditorías de Accesibilidad WCAG 2.1 AA con @axe-core/playwright<br/>• Locators orientados a accesibilidad (getByRole, getByLabel)<br/>• Aislamiento determinista de datos por usuario único"]
+
+        L3["⚡ Capa de Resiliencia de Red & Simulación de Caos (Chaos Testing)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Intercepción de tráfico de red (page.route())<br/>• Inyección de fallos HTTP 500 y 404 controlados<br/>• Simulación de conectividad degradada y modo offline (setOffline / abort)<br/>• Latencia extrema (1.5s - 2s) y prevención de doble submit<br/>• Sincronización asíncrona sin timeouts fijos"]
+
+        L2["🔌 Capa de Contrato & Integración de API (Postman + Newman Runner)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 25 peticiones HTTP organizadas en 4 carpetas funcionales<br/>• 96 aserciones de contrato, tipos y esquemas (100% aprobadas)<br/>• Verificación de seguridad JWT y RBAC sin interfaz gráfica<br/>• Runner configurable con Newman y reportes ejecutivos HTML interactivos"]
+
+        L1["🛡️ Base de Metacalidad & Pruebas Unitarias (Vigía + Vitest / Jest)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Auditoría AST de suites de prueba con Vigía (prevención de falsos positivos)<br/>• Pruebas unitarias de algoritmos y Casos de Uso puros de dominio<br/>• Suites de regresión automáticas para 14 defectos reales documentados<br/>• Trazabilidad completa entre bugs, planes de prueba y pruebas automáticas"]
+
+        L4 --- L3
+        L3 --- L2
+        L2 --- L1
+    end
+
+    subgraph CI_Pipelines["Orquestación en Integración Continua (GitHub Actions)"]
+        CI_API["ci-api-postman.yml<br/>(Pruebas de Contrato y Smoke API)"]
+        CI_E2E["ci-e2e.yml<br/>(Playwright E2E y Accesibilidad Axe)"]
+        CI_Vigia["ci-vigia.yml<br/>(Self-Check AST en PRs)"]
+        CI_Bugs["ci-verificacion-bugs.yml<br/>(Regresiones de Defectos Documentados)"]
+    end
+
+    L2 -.-> CI_API
+    L4 -.-> CI_E2E
+    L1 -.-> CI_Vigia
+    L1 -.-> CI_Bugs
+```
+
+---
 
 ## Arquitectura: Page Object Model (POM)
 
@@ -69,6 +109,7 @@ automatizacion-e2e/
 ├── tests/
 │   ├── accesibilidad.spec.js # Auditorías A11y con @axe-core/playwright (WCAG 2.1 AA)
 │   ├── autenticacion.spec.js # Casos E2E de auth usando AuthPage y TareasPage
+│   ├── resiliencia-red.spec.js# Resiliencia de red, caos HTTP 500/404, offline y latencia
 │   ├── tareas.spec.js        # Casos E2E de gestión de tareas usando TareasPage
 │   ├── regresiones-ui.spec.js# Pruebas de no-regresión de interfaz
 │   ├── fixtures/
@@ -81,6 +122,23 @@ automatizacion-e2e/
 1. **Mantenibilidad:** Si un selector o etiqueta cambia en el frontend, solo se actualiza en el Page Object correspondiente sin tocar los specs.
 2. **Legibilidad orientada a intención:** Las pruebas describen el flujo de usuario en alto nivel (`await authPage.registrar(...)`, `await tareasPage.agregarTarea(...)`).
 3. **Selectores accesibles centralizados:** Todos los locators continúan priorizando roles y etiquetas accesibles (`getByRole`, `getByLabel`), garantizando que la suite falle si la accesibilidad se degrada.
+
+## Resiliencia de Red y Mocking Avanzado (Chaos Engineering)
+
+Con `tests/resiliencia-red.spec.js`, se valida la robustez de la aplicación frente a condiciones de red adversas e inestables mediante `page.route()` y las API de contexto de Playwright:
+
+1. **Inyección de Errores de Servidor (HTTP 500 y HTTP 404):**
+   - Intercepción de endpoints críticos (`/auth/login`, `/auth/register`, `/tasks`, `/tasks/:id`).
+   - Verificación de que la UI renderiza banners accesibles (`role="alert"`) con explicaciones amigables sin crashear el árbol de componentes (sin pantalla blanca ni fallos de renderizado en React).
+   - Validación de la reversión de cambios optimistas ante respuestas 404/500 (p. ej., desmarcado automático del checkbox si el backend rechaza la actualización).
+2. **Simulación de Modo Offline y Cortes de Conexión:**
+   - Emulación de pérdida súbita de conectividad mediante `page.context().setOffline(true)` y cancelación de paquetes con `route.abort('failed')`.
+   - Verificación de avisos de conectividad (`"No se pudo conectar con la API"`) y preservación íntegra de la sesión y datos locales.
+   - Validación de auto-recuperación: al restaurar `setOffline(false)` o remover interceptores, el usuario puede reintentar su acción exitosamente sin recargar la página.
+3. **Latencia Extrema y Prevención de Doble Envío (Slow Network):**
+   - Inyección de retardos de 1.5s a 2.0s para simular conexiones móviles lentas (slow 3G / edge).
+   - Verificación de que los botones de acción cambian a estado deshabilitado (`disabled`) y presentan retroalimentación visual inmediata (`"Enviando..."`, `"Cargando..."`).
+   - Verificación estricta contra condiciones de carrera y *double submit*: clics repetidos o forzados no envían peticiones redundantes al servidor.
 
 ## Auditorías de Accesibilidad (A11y - WCAG 2.1 AA)
 

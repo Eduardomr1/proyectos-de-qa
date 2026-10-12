@@ -62,4 +62,9 @@ export class AuthPage {
   async esperarError(mensaje) {
     await expect(this.alert).toContainText(mensaje);
   }
+
+  async esperarBotonCargando() {
+    await expect(this.submitButton).toBeDisabled();
+    await expect(this.submitButton).toHaveText('Enviando...');
+  }
 }

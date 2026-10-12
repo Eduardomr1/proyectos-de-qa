@@ -16,10 +16,16 @@ export class TareasPage {
     this.emptyMessage = page.getByText('Todavia no tienes tareas. Agrega la primera arriba.');
     this.taskItems = page.locator('ul.tasks li');
     this.completedItems = page.locator('ul.tasks li.done');
+    this.alert = page.getByRole('alert');
+    this.loadingMessage = page.getByText('Cargando...');
   }
 
   async esperarCarga() {
     await expect(this.heading).toBeVisible();
+  }
+
+  async esperarError(mensaje) {
+    await expect(this.alert).toContainText(mensaje);
   }
 
   async agregarTarea(titulo) {
