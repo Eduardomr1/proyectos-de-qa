@@ -16,6 +16,7 @@ gastos/
 vigia/
 reservas/
 mini-crm-php-mysql/
+pulsetrack/
 Claude outputs/
 sincronizar-repos.ps1
 *.tgz

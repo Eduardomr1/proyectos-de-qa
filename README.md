@@ -7,6 +7,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%7C%20Feature--First-blue)](./reservas)
 [![Docs Arquitectura](https://img.shields.io/badge/Docs-Arquitectura%20%26%20Diagramas-blueviolet)](./docs/arquitectura)
+[![GitHub Profile](https://img.shields.io/badge/GitHub-Profile%20README-181717?logo=github)](./docs/profile)
 
 Portafolio enfocado en **desarrollo full-stack, ingeniería de software móvil y aseguramiento de calidad (QA Automation)**. Los proyectos aquí presentados demuestran diseño arquitectónico robusto, dominio de TypeScript estricto, análisis estático de código mediante AST, arquitecturas desacopladas (*Clean Architecture* y *Offline-First*), suites de prueba deterministas y automatización en pipelines de Integración Continua (CI/CD).
 
@@ -136,8 +137,9 @@ Para líderes de ingeniería, arquitectos y reclutadores técnicos que deseen au
 
 ```
 PortafolioProfesional/
-├── docs/                     # Compendio de arquitectura de software y diagramas Mermaid
-│   └── arquitectura/         # Especificaciones técnicas de diseño, flujo de datos y calidad
+├── docs/                     # Compendio de arquitectura de software, diagramas y perfil
+│   ├── arquitectura/         # Especificaciones técnicas de diseño, flujo de datos y calidad
+│   └── profile/              # README de perfil personal de GitHub para Eduardomr1
 ├── gastos/                   # App móvil React Native + Expo + Reanimated + Offline-First
 ├── reservas/                 # SaaS de Citas con Next.js + Clean Architecture + Drizzle ORM
 ├── vigia/                    # Linter AST en TypeScript & GitHub Action para suites de pruebas
@@ -155,4 +157,5 @@ PortafolioProfesional/
 
 **Eduardo Maytorena**  
 - Correo: [eduardo_maytorenar@outlook.com](mailto:eduardo_maytorenar@outlook.com)  
-- GitHub: [github.com/eduardo-mr1](https://github.com/eduardo-mr1)
+- GitHub: [github.com/Eduardomr1](https://github.com/Eduardomr1)  
+- Perfil Personal de GitHub: [docs/profile/README.md](./docs/profile/README.md)
