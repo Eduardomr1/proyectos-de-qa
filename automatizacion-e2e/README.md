@@ -1,7 +1,7 @@
 # Automatizacion E2E
 
 Suite de pruebas extremo a extremo con Playwright sobre el
-[gestor de tareas](https://github.com/eduardo-mr1/proyectos-de-programacion):
+[gestor de tareas](https://github.com/Eduardomr1/proyectos-de-programacion):
 API en Node/Express + cliente en React.
 
 44 pruebas cubriendo resiliencia de red y mocking avanzado (page.route()), accesibilidad WCAG 2.1 AA, autenticacion, CRUD de tareas, no-regresion y aislamiento entre usuarios.

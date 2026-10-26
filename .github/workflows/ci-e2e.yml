@@ -21,7 +21,7 @@ jobs:
       - name: Checkout de la aplicacion
         uses: actions/checkout@v4
         with:
-          repository: eduardo-mr1/proyectos-de-programacion
+          repository: Eduardomr1/proyectos-de-programacion
           # Rama explicita: sin esto se toma la rama por defecto del repo, que
           # puede ir por detras de las correcciones que estas pruebas asumen.
           ref: main

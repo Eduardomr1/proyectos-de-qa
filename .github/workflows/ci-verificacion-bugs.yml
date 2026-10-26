@@ -24,7 +24,7 @@ jobs:
       - name: Checkout de la aplicacion
         uses: actions/checkout@v4
         with:
-          repository: eduardo-mr1/proyectos-de-programacion
+          repository: Eduardomr1/proyectos-de-programacion
           ref: main
           path: app
 

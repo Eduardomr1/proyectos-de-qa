@@ -6,7 +6,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Suite Status](https://img.shields.io/badge/Tests-96%2F96%20Passed%20(100%25)-brightgreen)](#matriz-de-cobertura-de-endpoints-y-aserciones)
 
-Suite integral de pruebas automatizadas de API para la [API del gestor de tareas](https://github.com/eduardo-mr1/proyectos-de-programacion/tree/main/api-gestor-tareas). Esta solución permite validar contratos de API REST, seguridad basada en JWT, reglas de validación de negocio y prevención de regresiones de bugs, ejecutable tanto en la interfaz interactiva de **Postman** como en entornos desatendidos de **CI/CD** y terminal local mediante un **runner configurable con Newman y reportes ejecutivos interactivos en HTML**.
+Suite integral de pruebas automatizadas de API para la [API del gestor de tareas](https://github.com/Eduardomr1/proyectos-de-programacion/tree/main/api-gestor-tareas). Esta solución permite validar contratos de API REST, seguridad basada en JWT, reglas de validación de negocio y prevención de regresiones de bugs, ejecutable tanto en la interfaz interactiva de **Postman** como en entornos desatendidos de **CI/CD** y terminal local mediante un **runner configurable con Newman y reportes ejecutivos interactivos en HTML**.
 
 ---
 

@@ -1,9 +1,9 @@
 # Portafolio Profesional de Ingeniería de Software & QA — Eduardo Maytorena
 
-[![CI E2E](https://github.com/eduardo-mr1/proyectos-de-qa/actions/workflows/ci-e2e.yml/badge.svg)](https://github.com/eduardo-mr1/proyectos-de-qa/actions/workflows/ci-e2e.yml)
-[![CI API Postman](https://github.com/eduardo-mr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml/badge.svg)](https://github.com/eduardo-mr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml)
-[![Vigía CI](https://github.com/eduardo-mr1/vigia/actions/workflows/ci.yml/badge.svg)](https://github.com/eduardo-mr1/vigia/actions)
-[![Control de Gastos CI](https://github.com/eduardo-mr1/control-de-gastos/actions/workflows/ci.yml/badge.svg)](https://github.com/eduardo-mr1/control-de-gastos/actions/workflows/ci.yml)
+[![CI E2E](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-e2e.yml/badge.svg)](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-e2e.yml)
+[![CI API Postman](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml/badge.svg)](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml)
+[![Vigía CI](https://github.com/Eduardomr1/vigia/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardomr1/vigia/actions)
+[![Control de Gastos CI](https://github.com/Eduardomr1/control-de-gastos/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardomr1/control-de-gastos/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%7C%20Feature--First-blue)](./reservas)
 [![Docs Arquitectura](https://img.shields.io/badge/Docs-Arquitectura%20%26%20Diagramas-blueviolet)](./docs/arquitectura)
