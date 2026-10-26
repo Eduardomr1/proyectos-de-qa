@@ -38,7 +38,7 @@
   <g transform="translate(48, 30)">
     <rect width="320" height="26" rx="13" fill="url(#badge-pill-light)" stroke="#0284c7" stroke-opacity="0.3" stroke-width="1"/>
     <circle cx="16" cy="13" r="4" fill="#0284c7"/>
-    <text x="28" y="17" class="pill-text-light">Senior Fullstack &amp; QA Automation</text>
+    <text x="28" y="17" class="pill-text-light">Fullstack &amp; QA Automation Engineer</text>
   </g>
 
   <!-- Main Name Header -->
