@@ -1,0 +1,29 @@
+{
+  "name": "@eduardomr1/herramientas-qa",
+  "version": "1.0.0",
+  "description": "Kit de ingenieria QA sin dependencias externas para Node.js 22: generacion determinista de valores limite (BVA/EP), validacion de contratos JSON Schema/HTTP, analisis de flakiness en suites E2E y auditoria defensiva OWASP API Top 10.",
+  "type": "module",
+  "main": "./src/index.js",
+  "bin": {
+    "herramientas-qa": "./src/cli.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "cli": "node ./src/cli.js"
+  },
+  "keywords": [
+    "qa",
+    "testing",
+    "boundary-value-analysis",
+    "contract-testing",
+    "flaky-tests",
+    "owasp-api-top-10",
+    "playwright",
+    "nodejs"
+  ],
+  "author": "Eduardo Maytorena <eduardo_maytorenar@outlook.com>",
+  "license": "MIT"
+}
