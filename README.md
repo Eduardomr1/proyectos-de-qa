@@ -2,6 +2,7 @@
 
 [![CI E2E](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-e2e.yml/badge.svg)](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-e2e.yml)
 [![CI API Postman](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml/badge.svg)](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-api-postman.yml)
+[![CI Herramientas QA](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-herramientas-qa.yml/badge.svg)](https://github.com/Eduardomr1/proyectos-de-qa/actions/workflows/ci-herramientas-qa.yml)
 [![Vigía CI](https://github.com/Eduardomr1/vigia/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardomr1/vigia/actions)
 [![Control de Gastos CI](https://github.com/Eduardomr1/control-de-gastos/actions/workflows/ci.yml/badge.svg)](https://github.com/Eduardomr1/control-de-gastos/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-3178C6?logo=typescript)](https://www.typescriptlang.org/)
@@ -20,6 +21,7 @@ Portafolio enfocado en **desarrollo full-stack, ingeniería de software móvil y
 | **[Gastos](./gastos)** | App Móvil (iOS & Android) | **React Native**, **Reanimated**, Expo SDK 57, TypeScript Strict, TanStack Query, MMKV, Supabase, Maestro | **Offline-First** con cola de persistencia síncrona en MMKV; sincronización RPC idempotente con IDs en cliente; aritmética monetaria en centavos enteros (`assertCents`). | **98% Cobertura**, 186 pruebas unitarias/integración aprobadas, E2E en Maestro en CI, accesibilidad tipográfica probada al 310%. |
 | **[Reservas](./reservas)** | Plataforma SaaS Web | Next.js 16 (React 19) / **Vue 3**, TypeScript Strict, Tailwind CSS 4, Drizzle ORM, Supabase (PostgreSQL), Vitest | **Clean Architecture** (Domain, Data, Presentation) + **Feature-First**; Casos de Uso puros; motor matemático anti-colisión; manejo de errores tipados con patrón `Failure`. | **100% tipado estricto** (0% `any`), pruebas de dominio con Vitest, Design System propio accesible (WCAG, touch targets $\ge 44$px). |
 | **[Vigía](./vigia)** | Developer Tooling / CI Action | **TypeScript AST** (Compiler API), Node.js, GitHub Actions Toolkit, Jest/Playwright/Cypress parser | Análisis estático de sintaxis (AST) para detectar pruebas que pasan en verde sin verificar aserciones reales (8 reglas P1–P3); detección de selectores negativos huérfanos. | **129 pruebas en 4 suites**, auto-verificación en CI (`self-check`), análisis diferencial veloz sobre el diff del PR (`changed-only`). |
+| **[Herramientas QA](./herramientas-qa)** | QA Reliability, SLO & Security Kit | **Node.js 22** (`node:crypto`, `node:test`), ES Modules, JSON Schema, JUnit/Playwright Parser, CLI (**0 dependencias**) | PRNG determinista (`SHA-256` + `Mulberry32`) para tablas BVA/EP ISTQB; contratos HTTP/SLO estrictos; compuerta anti-flakiness ($P50\text{–}P99$) y auditor defensivo **OWASP API Top 10 (2023)**. | **32 pruebas en 11 suites** (`100% pass`), **0 dependencias externas** (cero riesgo *supply-chain*), binarios CLI con códigos POSIX en CI. |
 | **[Automatización E2E](./automatizacion-e2e)** | Framework E2E & QA Core | **Playwright**, **Newman**, Postman, JavaScript/Node.js, Express, React, GitHub Actions | **Page Object Model (POM)** estructurado; selectores por rol y accesibilidad (`getByRole`, `getByLabel`); sincronización determinista sin esperas fijas; contrato de API automatizado. | **15 pruebas E2E** + **96 aserciones de API**, 8 defectos reales corregidos y blindados con pruebas de regresión, trazas y captura en fallos. |
 
 ---
@@ -74,20 +76,21 @@ Herramienta de análisis estático publicada como GitHub Action y CLI que audita
 
 ---
 
-### 4. [Automatización E2E](./automatizacion-e2e) · Playwright & Calidad de Software
+### 4. [Automatización E2E](./automatizacion-e2e) & [Herramientas QA](./herramientas-qa) · Calidad Integral
 
-Suite de automatización end-to-end con Playwright y pruebas de contrato de API sobre una aplicación real de gestión de tareas (API en Node/Express + cliente web).
+Suite de automatización end-to-end con Playwright, pruebas de contrato de API y kit nativo de confiabilidad/seguridad sobre una aplicación real de gestión de tareas (API en Node/Express + cliente web).
 
-- **Stack:** Playwright, JavaScript (Node.js), Postman, Newman CLI, GitHub Actions.
+- **Stack:** Playwright, Node.js 22 (`node:test`, `node:crypto`), Postman, Newman CLI, GitHub Actions.
 - **Decisiones de Arquitectura Críticas:**
   - **Page Object Model (POM):** Arquitectura modular encapsulada en `AuthPage` y `TareasPage`, separando la interacción con la interfaz de la lógica de aserción de las pruebas.
   - **Locators Orientados a Accesibilidad:** Selectores basados en roles semánticos (`getByRole`) y etiquetas (`getByLabel`), garantizando resiliencia ante cambios estéticos de clases y alertando regresiones en accesibilidad web.
   - **Sincronización Determinista:** Erradicación completa de esperas fijas (`page.waitForTimeout`); todo flujo aguarda condiciones de estado y reactividad de la aplicación.
-  - **Aislamiento de Datos por Prueba:** Generación dinámica de cuentas únicas por ejecución, permitiendo repetibilidad sin ensuciar el estado compartido.
+  - **Semillas Reproducibles y Contratos sin Dependencias (`herramientas-qa`):** Derivación `SHA-256` + `Mulberry32` para reproducir en local exactamente la misma tabla de valores límite (BVA/EP) que falló en CI, junto con auditoría de seguridad OWASP API Top 10 y compuertas de 0% flakiness.
 - **Ecosistema Completo de QA:**
+  - **[Herramientas QA (`@eduardomr1/herramientas-qa`)](./herramientas-qa):** Biblioteca modular y CLI en Node.js 22 (0 dependencias externas) con validador JSON Schema/SLO HTTP, analizador de estabilidad Playwright/JUnit ($P50\text{–}P99$) y auditor defensivo OWASP API Top 10 (32 pruebas en 11 suites).
   - **[Pruebas de API (Postman + Newman)](./pruebas-api-postman):** 25 peticiones y 96 aserciones que validan tipos y contratos en CI.
   - **[Reporte de Bugs](./reporte-de-bugs):** 8 defectos reales descubiertos en auditorías exploratorias, con causa raíz analizada, corrección en pull request y pruebas de regresión automáticas asociadas.
-  - **[Plan de Pruebas](./plan-de-pruebas):** Estrategia y 17 casos manuales organizados por prioridad y matriz de riesgos sobre SauceDemo.
+  - **[Plan de Pruebas](./plan-de-pruebas):** Estrategia, matriz de trazabilidad RTM y 17 casos manuales organizados por prioridad y matriz de riesgos sobre SauceDemo.
 
 ---
 
@@ -106,8 +109,9 @@ Verificación y Cierre en CI  ←  Pruebas de Regresión  ←  Detección de Def
 | Capa | Herramienta | Enfoque y Propósito |
 |---|---|---|
 | **Análisis Estático (AST)** | Vigía | Detecta pruebas vacías o falsos positivos antes del merge. |
-| **Pruebas Unitarias & Dominio** | Vitest / Jest | Valida reglas de negocio, Casos de Uso y motores matemáticos sin efectos secundarios. |
-| **Integración & Contrato** | Node Test Runner / Postman + Newman | Garantiza que la API cumpla contratos HTTP, tipos y aislamiento de datos. |
+| **Pruebas Unitarias & Dominio** | Vitest / Jest / `node:test` | Valida reglas de negocio, tablas BVA deterministas, Casos de Uso y motores matemáticos sin efectos secundarios. |
+| **Integración, Contratos & SLO** | `herramientas-qa` / Postman + Newman | Garantiza esquemas estrictos (`additionalProperties: false`), tipos exactos, aislamiento de datos y presupuestos de latencia HTTP. |
+| **Seguridad Defensiva API & Flakiness** | `herramientas-qa` CLI | Audita cabeceras HTTP/CORS, fugas de trazas SQL/V8, vectores OWASP API Top 10 (2023) y compuertas CI de 0% flakiness ($P50\text{–}P99$). |
 | **Extremo a Extremo (E2E)** | Playwright / Maestro | Verifica flujos de usuario reales de principio a fin en web y dispositivos móviles. |
 
 ## 🏛️ Arquitectura de Sistemas & Diagramas de Ingeniería
@@ -118,6 +122,7 @@ Para líderes de ingeniería, arquitectos y reclutadores técnicos que deseen au
 - **[Clean Architecture & Feature-First (Reservas / AgendaCitas)](./docs/arquitectura/reservas-clean-architecture.md):** Aislamiento estricto de dominio, motor matemático anti-colisión, manejo semántico de errores tipados (`Failure`) y segregación de barrels cliente/servidor (`index.ts` vs `server.ts`).
 - **[Pipeline AST & Code Scanning (Vigía)](./docs/arquitectura/vigia-ast-pipeline.md):** Análisis de Árbol de Sintaxis Abstracta con TypeScript Compiler API, detección de falsos positivos en suites de prueba y exportación de reportes OASIS SARIF v2.1.0 para GitHub Code Scanning.
 - **[Pirámide de Pruebas & Calidad Integral (Automatización E2E)](./docs/arquitectura/automatizacion-e2e-testing-pyramid.md):** Page Object Model en Playwright, auditorías automatizadas de accesibilidad web (Axe Core / WCAG 2.1 AA), contrato de API en Newman y simulación de resiliencia ante caos de red.
+- **[ADR-001: Contratos Estrictos y Datos Deterministas sin Dependencias (Herramientas QA)](./docs/arquitectura/adr-001-contratos-y-datos-deterministas.md):** Derivación de semillas `SHA-256` + `Mulberry32`, prevención de deriva de esquema y eliminación de riesgos de cadena de suministro en runners CI.
 
 👉 **Consulta el compendio completo en [docs/arquitectura/README.md](./docs/arquitectura/README.md)**.
 
@@ -128,8 +133,8 @@ Para líderes de ingeniería, arquitectos y reclutadores técnicos que deseen au
 - **Lenguajes:** TypeScript (Strict Mode), JavaScript (ESNext), Node.js, PHP, SQL.
 - **Frontend & Móvil:** React Native, React 19, Next.js 16, Vue 3, React Native Reanimated, Expo, Tailwind CSS.
 - **Backend & Bases de Datos:** Node.js, Express, PostgreSQL (Supabase), Drizzle ORM, SQLite, PDO / MySQL, MMKV.
-- **Testing & Tooling:** Playwright, Vitest, Jest, Maestro, Postman / Newman, TypeScript Compiler API (AST), GitHub Actions.
-- **Principios & Metodologías:** Clean Architecture, Feature-First, Page Object Model (POM), Offline-First, CI/CD, WCAG Accessibility.
+- **Testing & Tooling:** Playwright, Vitest, Jest, Node.js Test Runner (`node:test`), Maestro, Postman / Newman, TypeScript Compiler API (AST), GitHub Actions.
+- **Principios & Metodologías:** Clean Architecture, Feature-First, Page Object Model (POM), Offline-First, Contract & SLO Testing, OWASP API Security, CI/CD, WCAG Accessibility.
 
 ---
 
@@ -138,15 +143,16 @@ Para líderes de ingeniería, arquitectos y reclutadores técnicos que deseen au
 ```
 PortafolioProfesional/
 ├── docs/                     # Compendio de arquitectura de software, diagramas y perfil
-│   ├── arquitectura/         # Especificaciones técnicas de diseño, flujo de datos y calidad
+│   ├── arquitectura/         # Especificaciones técnicas de diseño, ADR-001 y diagramas
 │   └── profile/              # README de perfil personal de GitHub para Eduardomr1
 ├── gastos/                   # App móvil React Native + Expo + Reanimated + Offline-First
 ├── reservas/                 # SaaS de Citas con Next.js + Clean Architecture + Drizzle ORM
 ├── vigia/                    # Linter AST en TypeScript & GitHub Action para suites de pruebas
+├── herramientas-qa/          # Kit CLI Node 22 (0 deps): BVA determinista, contratos SLO, flakiness y OWASP API
 ├── automatizacion-e2e/       # Framework E2E con Playwright y Page Object Model (POM)
 ├── pruebas-api-postman/      # Colección Postman y ejecución Newman CI (25 req, 96 asserts)
 ├── reporte-de-bugs/          # Documentación de 8 defectos reales, causa raíz y regresiones
-├── plan-de-pruebas/          # Estrategia de pruebas, matriz de riesgos y 17 casos manuales
+├── plan-de-pruebas/          # Estrategia de pruebas, matriz RTM y 17 casos manuales
 ├── proyectos-de-programacion/# API REST Node/Express + Frontend React + Motor de Búsqueda BM25
 └── mini-crm-php-mysql/       # Sistema CRM en PHP 7.4 + MySQL con arquitectura MVC pura
 ```

@@ -1,10 +1,10 @@
 # Matriz de Trazabilidad de Requisitos y Automatización (RTM)
 
 > **Documento:** Matriz de Trazabilidad de Requisitos, Casos Manuales y Suites Automatizadas  
-> **Área:** Aseguramiento de Calidad (QA), Testing Funcional & Automatización E2E / API  
+> **Área:** Aseguramiento de Calidad (QA), Testing Funcional, Rendimiento SLO, Seguridad API & Automatización E2E  
 > **Autor:** Eduardo Maytorena `<eduardo_maytorenar@outlook.com>`  
-> **Fecha de Emisión:** Octubre 2026  
-> **Versión:** 2.0 — Estado: Aprobado / Vigente  
+> **Fecha de Emisión:** Noviembre 2026  
+> **Versión:** 2.1 — Estado: Aprobado / Vigente  
 
 ---
 
@@ -48,10 +48,11 @@ En la práctica profesional de QA, las pruebas manuales y la automatización no 
    └────────────────────────────────────────────────────────┘
 ```
 
-Este documento consolida la trazabilidad de dos ámbitos complementarios:
+Este documento consolida la trazabilidad de cuatro ámbitos complementarios:
 * **Ámbito A — Plan Funcional de SauceDemo ([`plan-de-pruebas.md`](./plan-de-pruebas.md) y [`casos-de-prueba.md`](./casos-de-prueba.md)):** 17 casos funcionales manuales categorizados con su viabilidad técnica, capa óptima de automatización y arquitectura proyectada en Playwright.
 * **Ámbito B — Ecosistema Real Gestor de Tareas & Reporte de Bugs ([`reporte-de-bugs`](../reporte-de-bugs), [`automatizacion-e2e`](../automatizacion-e2e), [`pruebas-api-postman`](../pruebas-api-postman)):** Trazabilidad 100% implementada y probada en código que mapea cada caso funcional, prueba de integración, prueba de contrato y los 8 defectos reales corregidos (`BUG-001` al `BUG-008`).
 * **Ámbito C — Lógica Crítica de Dominio ([`reservas`](../reservas) y [`gastos`](../gastos)):** Trazabilidad hacia pruebas unitarias de dominio puro (cálculo de disponibilidad anti-colisión con Vitest y aritmética monetaria en centavos).
+* **Ámbito D — Confiabilidad SRE, Presupuestos SLO y Seguridad Defensiva API ([`herramientas-qa`](../herramientas-qa)):** Trazabilidad de generación determinista de valores límite (BVA/EP), validación estricta de contratos JSON Schema, compuertas de 0% flakiness ($P50\text{–}P99$) y vectores defensivos OWASP API Security Top 10 (2023).
 
 ---
 
@@ -145,11 +146,11 @@ Uno de los aportes más significativos del portafolio es la **trazabilidad bidir
 
 ---
 
-## 6. Trazabilidad de Lógica de Dominio Crítico (`Reservas` & `Gastos`)
+## 6. Trazabilidad de Lógica de Dominio, Rendimiento SLO y Seguridad API
 
-Además de las aplicaciones e-commerce y de tareas, el portafolio aplica trazabilidad sobre componentes de alta complejidad de dominio donde los errores representan pérdidas financieras o colisiones de datos:
+Además de las aplicaciones e-commerce y de tareas, el portafolio aplica trazabilidad sobre lógica de dominio financiero/agenda y sobre compuertas transversales de confiabilidad SRE y seguridad defensiva ([`herramientas-qa`](../herramientas-qa)):
 
-| Proyecto | Componente / Regla de Negocio | Riesgo Mitigado | Tipo de Prueba | Archivo de Prueba | Framework | Resultado |
+| Proyecto | Componente / Regla de Calidad | Riesgo Mitigado | Tipo de Prueba | Archivo de Prueba | Framework | Resultado |
 |---|---|---|---|---|---|---|
 | **Reservas** | Motor Anti-Colisión de Citas | Traslape de turnos y citas en horarios ocupados | Unitaria de Dominio | [`disponibilidad.test.ts`](../reservas/src/lib/disponibilidad.test.ts) | Vitest | 100% aprobado |
 | **Reservas** | Contrato de Errores Tipados (`Failure`) | Fuga de excepciones técnicas de Postgres/Supabase a la UI | Unitaria de Dominio | [`traducir.test.ts`](../reservas/src/shared/errors/traducir.test.ts) | Vitest | 100% aprobado |
@@ -157,12 +158,17 @@ Además de las aplicaciones e-commerce y de tareas, el portafolio aplica trazabi
 | **Reservas** | Autenticación y Autorización de Administrador | Acceso indebido al panel de control del negocio | Casos de Uso | [`IniciarSesionUseCase.test.ts`](../reservas/src/features/auth/domain/usecases/IniciarSesionUseCase.test.ts) | Vitest | 100% aprobado |
 | **Gastos** | Aritmética Monetaria en Centavos (`assertCents`) | Pérdida o acumulación de errores de coma flotante IEEE-754 | Unitaria de Dominio | `cents.test.ts` / `balance.test.ts` | Jest / React Native | 98% cobertura |
 | **Gastos** | Idempotencia Offline y Persistencia MMKV | Generación de registros duplicados por reintentos de red | Unitaria / E2E | `sync.test.ts` / Maestro Flows en CI | Jest + Maestro | 186 tests passing |
+| **Herramientas QA** | Generador Determinista BVA / EP (`SHA-256` + `Mulberry32`) | Fallos irreproducibles en CI y regresiones de fronteras (`BUG-001`, `BUG-003`–`005`, `BUG-007`) | Unitaria Determinista | [`generador-datos.test.js`](../herramientas-qa/tests/generador-datos.test.js) | `node:test` (Node 22) | 9/9 aprobados |
+| **Herramientas QA** | Validador JSON Schema Estricto & Presupuesto HTTP SLO | Deriva de tipos (`BUG-006`), fuga de columnas internas (`additionalProperties: false`) y regresiones de latencia | Contrato & SLO | [`validador-contratos.test.js`](../herramientas-qa/tests/validador-contratos.test.js) | `node:test` (Node 22) | 7/7 aprobados |
+| **Herramientas QA** | Analizador de Estabilidad, Percentiles $P50\text{–}P99$ & Flakiness Gate | Pruebas intermitentes (*flip-rate*) ocultas por reintentos y degradación de tiempos P95 en Playwright/JUnit | Confiabilidad SRE | [`analizador-estabilidad.test.js`](../herramientas-qa/tests/analizador-estabilidad.test.js) | `node:test` (Node 22) | 5/5 aprobados |
+| **Herramientas QA** | Auditor Defensivo OWASP API Top 10 (2023) & Cabeceras HTTP | CORS permisivo con credenciales, ausencia de `nosniff`/`HSTS`, fugas de stack traces V8 y `SQLITE_ERROR` | Seguridad Defensiva | [`auditor-seguridad-api.test.js`](../herramientas-qa/tests/auditor-seguridad-api.test.js) | `node:test` (Node 22) | 6/6 aprobados |
+| **Herramientas QA** | Binario CLI y Códigos de Salida POSIX en Subproceso | Integración errónea de compuertas bloqueantes en pipelines GitHub Actions (`exit 0` vs `exit 1`) | Integración CLI | [`cli.test.js`](../herramientas-qa/tests/cli.test.js) | `node:test` (Node 22) | 5/5 aprobados |
 
 ---
 
 ## 7. Métricas de Cobertura Funcional y Análisis Cuantitativo
 
-### 7.1 Métricas Globales del Ecosistema Automatizado (Gestor de Tareas & Regresiones)
+### 7.1 Métricas Globales del Ecosistema Automatizado (Gestor de Tareas, Regresiones & Herramientas QA)
 
 ```
 Total de Casos Funcionales Identificados:    18 casos
@@ -171,6 +177,7 @@ Defectos Reales Identificados y Blindados:   8 / 8 bugs (100%)
 Aserciones de API en CI (Newman):            96 aserciones en 25 peticiones
 Pruebas E2E en CI (Playwright POM):          18 tests automatizados
 Pruebas Unitarias y de Regresión API:        16 tests en node:test
+Kit Nativo de Contratos, SLO & OWASP API:    32 tests en 11 suites (0 dependencias)
 ```
 
 ### 7.2 Cobertura por Nivel de Prioridad (Gestor de Tareas)
@@ -188,6 +195,7 @@ Pruebas Unitarias y de Regresión API:        16 tests en node:test
 |---|---|---|---|---|
 | **E2E (Navegador Real)** | Playwright (POM) | 18 pruebas completas | ~8 – 15 segundos | Verificación del viaje de usuario y accesibilidad |
 | **API / Contrato** | Newman / Postman | 25 peticiones / 96 aserciones | ~1.5 segundos | Validación de contrato, esquemas y límites |
+| **Confiabilidad, SLO & Seguridad** | `herramientas-qa` (`node:test`) | 32 pruebas en 11 suites | ~1.0 segundo | Semillas BVA, contratos estrictos, 0% flakiness y OWASP API |
 | **Integración / Regresiones** | `node:test` (nativo) | 16 pruebas con DB en memoria | ~250 milisegundos | Detección inmediata de regresiones de lógica |
 | **Dominio Puro (SaaS/Móvil)** | Vitest / Jest | > 300 pruebas unitarias | < 5 segundos | Validación matemática y arquitectónica estricta |
 
@@ -206,7 +214,7 @@ Pruebas Unitarias y de Regresión API:        16 tests en node:test
 
 1. **La trazabilidad evita los falsos verdes:** El análisis estático de Vigía combinado con esta matriz asegura que ninguna prueba pase en verde por casualidad; cada prueba tiene un requisito funcional o defecto que justifica su existencia.
 2. **El Page Object Model (POM) es el puente entre QA manual y automatización:** Un caso manual escrito con intención funcional (`"Ingresar usuario y password y dar click en Login"`) se traduce limpiamente en `await authPage.iniciarSesion(user, pass)`, manteniendo el test legible tanto para un analista manual como para un ingeniero de automatización.
-3. **El blindaje de regresiones es una inversión acumulativa:** Al transformar los scripts de reproducción de los 8 bugs en aserciones permanentes en CI, el costo de volver a sufrir el mismo defecto cae a cero.
+3. **El blindaje de regresiones y compuertas SLO es una inversión acumulativa:** Al transformar los scripts de reproducción de los 8 bugs, los presupuestos de latencia ($P50\text{–}P99$) y los vectores defensivos OWASP API en aserciones permanentes en CI sin dependencias externas, el costo de volver a sufrir el mismo defecto o degradación cae a cero.
 
 ---
 

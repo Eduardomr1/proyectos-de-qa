@@ -19,6 +19,7 @@ Está diseñado para que **Líderes Técnicos, Arquitectos de Software, Staff En
 | **[Gastos (Control de Gastos)](../../gastos)** | Móvil (React Native / Expo) | **Offline-First Reactive Architecture** con cola síncrona en MMKV y réplica local SQLite | Aritmética monetaria exclusiva en centavos enteros (`assertCents`); generación de UUID en cliente para idempotencia | Cola FIFO en MMKV resistente a cierre forzado del SO; reconciliación simétrica con Last-Write-Wins (LWW) |
 | **[Reservas (AgendaCitas)](../../reservas)** | Web SaaS (Next.js 16 / React 19) | **Clean Architecture** (Hexagonal/Onion) + **Feature-First** | Dominio puro libre de dependencias externas; Barrels cliente/servidor estrictamente segregados | Manejo semántico de errores mediante tipo `Failure`; motor matemático determinista de prevención de colisiones |
 | **[Vigía](../../vigia)** | Developer Tooling / CI/CD Action | **Pipeline de Análisis Estático de Sintaxis (AST)** con TypeScript Compiler API | Inspección semántica de llamadas vs. regex frágil; validación cruzada de selectores negativos contra el código fuente | Formato OASIS SARIF v2.1.0 para GitHub Code Scanning; self-check en CI; modo `changed-only` para PRs veloces |
+| **[Herramientas QA](../../herramientas-qa)** | QA Reliability, SLO & Security Kit | **Zero-Dependency Modular CLI & Contract Engine** sobre Node.js 22 (`node:crypto`, `node:test`) | Semillas PRNG deterministas (`SHA-256` + `Mulberry32`); esquemas cerrados (`additionalProperties: false`); 0 dependencias de terceros | Compuerta bloqueante de **0% flakiness** ($P50\text{–}P99$); auditoría de cabeceras HTTP/CORS y detección de fugas SQL/V8 (OWASP API 2023) |
 | **[Automatización E2E & QA](../../automatizacion-e2e)** | QA Core & Automation Framework | **Page Object Model (POM)** estructurado + Pirámide de Pruebas Multi-Capa | Locators por rol y etiqueta accesible (WCAG); cero esperas fijas; aislamiento total de datos por prueba | Captura determinista de trazas y capturas en fallos (`retain-on-failure`); suites de regresión acopladas a defectos reales |
 
 ---
@@ -308,11 +309,11 @@ flowchart TD
 
         L4["🔝 Capa E2E & Accesibilidad UI (Playwright POM + Axe Core)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 32 pruebas automatizadas en Chromium<br/>• Page Object Model estructurado (AuthPage, TareasPage)<br/>• Auditorías de Accesibilidad WCAG 2.1 AA con @axe-core/playwright<br/>• Locators orientados a accesibilidad (getByRole, getByLabel)<br/>• Aislamiento determinista de datos por usuario único"]
 
-        L3["⚡ Capa de Resiliencia de Red & Simulación de Caos (Chaos Testing)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Intercepción de tráfico de red (page.route())<br/>• Simulación de conectividad degradada y modo offline<br/>• Sincronización asíncrona sin timeouts fijos (eliminación de esperas frágiles)<br/>• Detección de UI asíncrona no optimista y condiciones de carrera"]
+        L3["⚡ Capa de Resiliencia, SLO & Seguridad API (Chaos + Herramientas QA)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Intercepción de tráfico de red (page.route()) y conectividad degradada<br/>• Compuerta CI de 0% flakiness y percentiles P50-P99 (Playwright / JUnit)<br/>• Auditoría defensiva OWASP API Top 10 (2023), cabeceras HTTP/CORS<br/>• Detección automática de fugas de stack traces V8 y errores SQL crudos"]
 
-        L2["🔌 Capa de Contrato & Integración de API (Postman + Newman Runner)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 25 peticiones HTTP organizadas en 4 carpetas funcionales<br/>• 96 aserciones de contrato, tipos y esquemas (100% aprobadas)<br/>• Verificación de seguridad JWT y RBAC sin interfaz gráfica<br/>• Runner configurable con Newman y reportes ejecutivos HTML interactivos"]
+        L2["🔌 Capa de Contrato & Integración de API (Newman + Herramientas QA)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• 25 peticiones HTTP con 96 aserciones en Newman + contratos JSON Schema<br/>• Bloqueo de propiedades no documentadas (additionalProperties: false)<br/>• Verificación de seguridad JWT, RBAC y presupuestos SLO de latencia<br/>• Generación determinista de valores límite (BVA/EP) con semilla SHA-256"]
 
-        L1["🛡️ Base de Metacalidad & Pruebas Unitarias (Vigía + Vitest / Jest)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Auditoría AST de suites de prueba con Vigía (prevención de falsos positivos)<br/>• Pruebas unitarias de algoritmos y Casos de Uso puros de dominio<br/>• Suites de regresión automáticas para 14 defectos reales documentados<br/>• Trazabilidad completa entre bugs, planes de prueba y pruebas automáticas"]
+        L1["🛡️ Base de Metacalidad & Pruebas Unitarias (Vigía + node:test / Vitest)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Auditoría AST de suites de prueba con Vigía (prevención de falsos positivos)<br/>• 32 pruebas nativas en herramientas-qa (0 dependencias externas)<br/>• Suites de regresión automáticas para defectos reales documentados<br/>• Trazabilidad completa entre bugs, planes de prueba y pruebas automáticas"]
 
         L4 --- L3
         L3 --- L2
@@ -322,12 +323,15 @@ flowchart TD
     subgraph CI_Pipelines["Orquestación en Integración Continua (GitHub Actions)"]
         CI_API["ci-api-postman.yml<br/>(Pruebas de Contrato y Smoke API)"]
         CI_E2E["ci-e2e.yml<br/>(Playwright E2E y Accesibilidad Axe)"]
+        CI_QA["ci-herramientas-qa.yml<br/>(Contratos, Flakiness SLO y OWASP API)"]
         CI_Vigia["ci-vigia.yml<br/>(Self-Check AST en PRs)"]
         CI_Bugs["ci-verificacion-bugs.yml<br/>(Regresiones de Defectos Documentados)"]
     end
 
     L2 -.-> CI_API
     L4 -.-> CI_E2E
+    L3 -.-> CI_QA
+    L1 -.-> CI_QA
     L1 -.-> CI_Vigia
     L1 -.-> CI_Bugs
 
@@ -341,7 +345,7 @@ flowchart TD
     class L3 midHigh;
     class L2 mid;
     class L1 base;
-    class CI_API,CI_E2E,CI_Vigia,CI_Bugs ci;
+    class CI_API,CI_E2E,CI_QA,CI_Vigia,CI_Bugs ci;
 ```
 
 ### 4.2 Matriz de Estrategias y Cobertura de QA
@@ -350,6 +354,8 @@ flowchart TD
 |---|---|---|---|
 | **Metacalidad (AST)** | Vigía | Detección de pruebas vacías o falsos positivos antes del merge | 129 pruebas en 4 suites; 0 falsos positivos |
 | **Pruebas de Dominio** | Vitest / Jest | Lógica de negocio pura, cálculo de disponibilidad y modelos monetarios | 98% cobertura en Gastos; 100% tipado estricto en Reservas |
+| **Datos BVA & Contratos SLO** | `herramientas-qa` (`node:test`) | Semillas deterministas `SHA-256`, JSON Schema estricto y latencia máxima | 32 pruebas en 11 suites; **0 dependencias externas** |
+| **Seguridad Defensiva & Flakiness** | `herramientas-qa` CLI | Vectores OWASP API 2023, cabeceras HTTP/CORS, anti-leak SQL y percentiles $P50\text{–}P99$ | Política bloqueante de **0% flakiness** y 100/100 en cabeceras |
 | **Pruebas de Contrato API** | Postman + Newman | Contratos HTTP, seguridad JWT, validación de esquemas y tipos | 25 peticiones, 96 aserciones, 100% aprobadas |
 | **Pruebas E2E (POM)** | Playwright | Flujos de usuario completos, persistencia y aislamiento entre cuentas | 32 pruebas automatizadas sin esperas fijas |
 | **Accesibilidad (A11y)** | Axe Core + WCAG | Cumplimiento de WCAG 2.1 AA (contraste, teclado, ARIA, semántica) | 0 violaciones críticas de accesibilidad |
@@ -365,6 +371,7 @@ flowchart TD
 | **UUID generado en el cliente** | `SERIAL` / Auto-increment en BD | Permite registrar entidades de forma offline instantánea y convierte cualquier reintento o doble clic en una operación naturalmente idempotente. |
 | **Clean Architecture + Barrels separados** | Estructura tradicional por tipo de archivo (`controllers/`, `views/`) | Previene la fuga de dependencias pesadas de base de datos o secretos de Node.js al empaquetado del navegador en Next.js (`server.ts` vs `index.ts`). |
 | **Análisis Estático por AST** | Expresiones regulares (Regex) | Los regex fallan catastróficamente ante cadenas de texto, comentarios multilínea o templates literales. El árbol AST de TypeScript proporciona conocimiento semántico real del código. |
+| **PRNG determinista y 0 dependencias (`herramientas-qa`)** | `Math.random()` + librerías pesadas de terceros | `Math.random()` impide reproducir fallos intermitentes de CI en entorno local, y paquetes externos amplían la superficie de CVEs. `SHA-256` + `Mulberry32` garantiza reproducibilidad exacta en `< 250 ms` ([ADR-001](./adr-001-contratos-y-datos-deterministas.md)). |
 | **Locators semánticos y accesibles** | Selectores XPath o clases CSS (`.btn-primary`) | Las clases CSS cambian con frecuencia ante rediseños estéticos. Los selectores por rol y etiqueta (`getByRole`, `getByLabel`) son resilientes y detectan regresiones de accesibilidad web. |
 
 ---
@@ -374,3 +381,4 @@ flowchart TD
 - [Especificación de Clean Architecture en Reservas](./reservas-clean-architecture.md)
 - [Arquitectura del Pipeline AST de Vigía](./vigia-ast-pipeline.md)
 - [Pirámide de Pruebas y Resiliencia en Automatización E2E](./automatizacion-e2e-testing-pyramid.md)
+- [ADR-001: Validación Determinista de Contratos y Datos sin Dependencias en Herramientas QA](./adr-001-contratos-y-datos-deterministas.md)
