@@ -1,0 +1,36 @@
+name: CI Herramientas QA
+
+on:
+  push:
+    paths:
+      - 'herramientas-qa/**'
+      - '.github/workflows/ci-herramientas-qa.yml'
+  pull_request:
+    paths:
+      - 'herramientas-qa/**'
+      - '.github/workflows/ci-herramientas-qa.yml'
+  workflow_dispatch:
+
+jobs:
+  unit-and-cli:
+    name: Suite Nativa Node 22 (0 Dependencias)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Ejecutar pruebas unitarias y de integracion CLI
+        working-directory: herramientas-qa
+        run: npm test
+
+      - name: Smoke check de subcomandos CLI
+        working-directory: herramientas-qa
+        run: |
+          node ./src/cli.js --help
+          node ./src/cli.js limites-texto --min 1 --max 200 > /dev/null
+          node ./src/cli.js vectores-owasp --categoria "API1:2023-BOLA" > /dev/null
