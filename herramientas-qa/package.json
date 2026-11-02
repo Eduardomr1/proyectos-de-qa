@@ -11,7 +11,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "test": "node --test tests/*.test.js",
+    "test": "node --test",
     "cli": "node ./src/cli.js"
   },
   "keywords": [
